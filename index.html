@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hotel Booking Receipt Generator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #e0f7fa;
+      margin: 0;
+      padding: 30px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 800px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #006064;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin: 10px 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #004d40;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      box-sizing: border-box;
+      border-radius: 6px;
+      outline: none;
+      border: 1px solid #00796b;
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 12px 20px;
+      background-color: #00796b;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #004d40;
+    }
+
+    #receipt {
+      margin-top: 30px;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      border: 1px solid #b2dfdb;
+    }
+
+    #receipt h2 {
+      text-align: center;
+      color: #004d40;
+      margin-bottom: 15px;
+    }
+
+    .section {
+      margin-bottom: 15px;
+    }
+
+    .section h3 {
+      border-bottom: 2px solid #00796b;
+      padding-bottom: 5px;
+      color: #006064;
+      margin-bottom: 10px;
+    }
+
+    .section p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #004d40;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .table th, .table td {
+      border: 1px solid #b2dfdb;
+      padding: 8px;
+      font-size: 14px;
+    }
+
+    .table th {
+      background: #b2dfdb;
+      text-align: left;
+      color: #004d40;
+    }
+
+    .total {
+      text-align: right;
+      font-weight: 700;
+      font-size: 16px;
+      margin-top: 10px;
+      color: #006064;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 13px;
+      color: #00796b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Hotel Booking Receipt Generator</h1>
+    <div>
+      <div class="form-group">
+        <label>Guest Name:</label>
+        <input type="text" id="guestName" placeholder="Enter full name">
+      </div>
+      <div class="form-group">
+        <label>Booking ID:</label>
+        <input type="text" id="bookingId" placeholder="BK-2025-0001">
+      </div>
+      <div class="form-group">
+        <label>Check-in Date:</label>
+        <input type="date" id="checkin">
+      </div>
+      <div class="form-group">
+        <label>Check-out Date:</label>
+        <input type="date" id="checkout">
+      </div>
+      <div class="form-group">
+        <label>Room Type:</label>
+        <select id="roomType">
+          <option value="" disabled selected>Select Room Type</option>
+          <option value="Single">Single - ₹1000/day</option>
+          <option value="Double">Double - ₹1800/day</option>
+          <option value="Deluxe">Deluxe - ₹2500/day</option>
+        </select>
+      </div>
+      <button onclick="generateReceipt()">Generate Receipt</button>
+    </div>
+
+    <div id="receipt"></div>
+  </div>
+
+  <script>
+    function generateReceipt() {
+      const guestName = document.getElementById('guestName').value;
+      const bookingId = document.getElementById('bookingId').value;
+      const checkin = document.getElementById('checkin').value;
+      const checkout = document.getElementById('checkout').value;
+      const roomType = document.getElementById('roomType').value;
+
+      if (!guestName || !bookingId || !checkin || !checkout || !roomType) {
+        alert("Please fill all fields!");
+        return;
+      }
+
+      let rate = 0;
+      if (roomType === "Single") rate = 1000;
+      else if (roomType === "Double") rate = 1800;
+      else if (roomType === "Deluxe") rate = 2500;
+
+      const checkinDate = new Date(checkin);
+      const checkoutDate = new Date(checkout);
+      const timeDiff = checkoutDate - checkinDate;
+
+      if (timeDiff <= 0) {
+        alert("Check-out date must be after check-in date!");
+        return;
+      }
+
+      const days = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+      const totalCost = days * rate;
+
+      const receiptHTML = `
+        <h2>Hotel Booking Receipt</h2>
+
+        <div class="section">
+          <h3>Hotel Details</h3>
+          <p><strong>Hotel Name:</strong> Grand Palace Hotel</p>
+          <p><strong>Address:</strong> #45 MG Road, Mysuru, Karnataka</p>
+          <p><strong>Contact:</strong> +91 98765 43210</p>
+          <p><strong>Email:</strong> info@grandpalace.com</p>
+        </div>
+
+        <div class="section">
+          <h3>Guest Information</h3>
+          <p><strong>Guest Name:</strong> ${guestName}</p>
+          <p><strong>Booking ID:</strong> ${bookingId}</p>
+        </div>
+
+        <div class="section">
+          <h3>Booking Details</h3>
+          <table class="table">
+            <tr>
+              <th>Check-in</th>
+              <th>Check-out</th>
+              <th>Room Type</th>
+              <th>Rate/day</th>
+              <th>Days</th>
+              <th>Amount</th>
+            </tr>
+            <tr>
+              <td>${checkin}</td>
+              <td>${checkout}</td>
+              <td>${roomType}</td>
+              <td>₹${rate.toFixed(2)}</td>
+              <td>${days}</td>
+              <td>₹${totalCost.toFixed(2)}</td>
+            </tr>
+          </table>
+          <div class="total">Total Amount: ₹${totalCost.toFixed(2)}</div>
+
+          <div class="footer">
+            Thank you for choosing Grand Palace Hotel.<br>
+            We look forward to hosting you again!
+          </div>
+        </div>
+      `;
+
+      document.getElementById('receipt').innerHTML = receiptHTML;
+
+      html2pdf().from(document.getElementById('receipt')).save(`${guestName}_Booking_Receipt.pdf`);
+    }
+  </script>
+</body>
+</html>

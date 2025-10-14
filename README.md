@@ -19,6 +19,6 @@ Built using **HTML, CSS, and JavaScript** with the **html2pdf.js** library.
 
 - **HTML5** – Structure  
 - **CSS3** – Styling and layout  
-- **JavaScript (ES6)** – Logic and interactivity  
+- **JavaScript** – Logic and interactivity  
 - **html2pdf.js** – For PDF generation  
 

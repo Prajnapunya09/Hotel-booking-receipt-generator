@@ -1,4 +1,4 @@
-# 🏨 Hotel Booking Receipt Generator
+# 🏨  Hotel Booking Receipt Generator
 
 A simple web-based application that allows users to **generate and download hotel booking receipts** in PDF format.  
 Built using **HTML, CSS, and JavaScript** with the **html2pdf.js** library.

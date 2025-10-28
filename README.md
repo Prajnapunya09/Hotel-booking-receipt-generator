@@ -5,7 +5,7 @@ Built using **HTML, CSS, and JavaScript** with the **html2pdf.js** library.
 
 ---
 
-## 🚀 Features
+## 🚀  Features
 
 - 🧾 Generate a professional hotel booking receipt instantly  
 - 📅 Calculates total stay duration and amount automatically  
